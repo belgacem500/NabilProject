@@ -8,18 +8,19 @@ session_start();
 if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== TRUE) {
     echo "<script>" . "window.location.href='./pages/login.php';" . "</script>";
     exit;
-  } elseif (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] == TRUE && $_SESSION["id"] !== '1') {
+} elseif (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] == TRUE && $_SESSION["id"] !== '1') {
     echo "<script>" . "window.location.href='./files.php'" . "</script>";
     exit;
-  }
+}
 
 # Include connection
 require_once "../database/config.php";
 require_once "../database/functions.php";
 # Define variables and initialize with empty values
 $username_err = $email_err = $password_err = $file_size_err = $file_limit_err = "";
-$username = $email = $password = $file_size = "";
-$file_limit = 0;
+$username = $email = $password =
+    $file_size = "10";
+$file_limit = 10;
 
 # Processing form data when form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -164,48 +165,54 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <form action="<?= htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" novalidate>
                         <div class="mb-3">
                             <label for="username" class="form-label">Username</label>
-                            <input type="text" class="form-control" name="username" id="username">
+                            <input type="text" class="form-control" placeholder="enter user name" name="username" id="username">
                             <small class="text-danger">
                                 <?= $username_err; ?>
                             </small>
                         </div>
                         <div class="mb-3">
                             <label for="email" class="form-label">Email Address</label>
-                            <input type="email" class="form-control" name="email" id="email">
+                            <input type="email" class="form-control" placeholder="enter email" name="email" id="email">
                             <small class="text-danger">
                                 <?= $email_err; ?>
                             </small>
                         </div>
+
                         <div class="mb-2">
                             <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control" name="password" id="password">
-                            <small class="text-danger">
-                                <?= $password_err; ?>
-                            </small>
-                        </div>
-                        <div class="mb-3 form-check">
-                            <input type="checkbox" class="form-check-input" id="togglePassword">
-                            <label for="togglePassword" class="form-check-label">Show Password</label>
-                        </div>
-                        <div class="row">
-                            <div class="col mb-3">
-                                <label for="username" class="form-label">File Size (mb) </label>
-                                <input type="number" class="form-control" name="file_limit" id="username">
+                            <div class="input-group mb-2">
+                                <div class="input-group mb-3">
+                                    <input type="password" class="form-control" placeholder="enter password" name="password" id="password">
+                                    <button class="btn btn-secondary" type="button" onclick="genPassword()" id="button-addon2">Generate Password</button>
+                                </div>
                                 <small class="text-danger">
-                                    <?=  $file_limit_err; ?>
+                                    <?= $password_err; ?>
                                 </small>
                             </div>
-                            <div class="col mb-3">
-                                <label for="username" class="form-label">File Limit (mb)</label>
-                                <input type="number" class="form-control" name="file_size" id="username">
-                                <small class="text-danger">
-                                    <?= $file_size_err; ?>
-                                </small>
+
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" class="form-check-input" id="togglePassword">
+                                <label for="togglePassword" class="form-check-label">Show Password</label>
                             </div>
-                        </div>
-                        <div class="mb-3">
-                            <input type="submit" class="btn btn-primary form-control" name="submit" value="Add User">
-                        </div>
+                            <div class="row">
+                                <div class="col mb-3">
+                                    <label for="username" class="form-label">File Size (mb) </label>
+                                    <input type="number" class="form-control" name="file_limit" id="file_size" value="10">
+                                    <small class="text-danger">
+                                        <?= $file_limit_err; ?>
+                                    </small>
+                                </div>
+                                <div class="col mb-3">
+                                    <label for="username" class="form-label">File Limit (mb)</label>
+                                    <input type="number" class="form-control" name="file_size" id="file_limit" value="10">
+                                    <small class="text-danger">
+                                        <?= $file_size_err; ?>
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <input type="submit" class="btn btn-primary form-control" name="submit" value="Add User">
+                            </div>
                     </form>
 
                     <!-- form ends here -->

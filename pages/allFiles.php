@@ -94,13 +94,14 @@ $files_result = $fileCont->getFilesData();
                                                         <input type="hidden" value="<?php echo $row['id']; ?>" name="file_id">
                                                         <input type="hidden" value="<?php echo $row['file_name']; ?>" name="file_name">
                                                         <input type="hidden" value="<?php echo $row['folder_name'];; ?>" name="folder_name">
-                                                        <button type="submit" name="delete-file-submit" class="btn btn-danger btn-sm">Delete</button>
+                                                        <button type="submit" name="delete-file-submit" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash-can me-1"></i> Delete</button>
                                                     </form>
                                                 </div>
                                                 <div class="col-5">
-                                                    <a href="<?php echo 'folders/'.$row['file_loc']; ?>" class="btn btn-primary btn-sm" Download="<?php echo $row['file_name'] ?>"> Download</a>
-                                        </th>
-                    </div>
+                                                    <input type="text" hidden value="<?php echo 'folders/'.$row['file_loc']; ?>" id="myInput">
+                                                    <button  class="btn btn-secondary btn-sm" onclick="myFunction()"><i class="fa-solid fa-copy me-1"></i> copie</button>
+                                                            </div>
+                                                        </th>
                     </tr>
                 <?php
                                 }
@@ -113,6 +114,8 @@ $files_result = $fileCont->getFilesData();
 
     <!-- users table -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+    <script src="../js/script.js"></script>
+
 </body>
 
 </html>

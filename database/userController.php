@@ -12,14 +12,32 @@ class userController
         $this->db = $db;
     }
 
-    //insert into user table ( insert )
+    //function to create a unique folder id
+    public function uniqueFolderId(){
+        $result = 1;
+        while($result){
+        $number = uniqid();
+        $varray = str_split($number);
+        $len = sizeof($varray);
+        $otp = array_slice($varray, $len-6, $len);
+        $otp = implode(",", $otp);
+        $otp = str_replace(',', '', $otp);
+        $result = $this->db->con->query("SELECT id FROM users WHERE folder_name ='{$otp}'");
+        $result = mysqli_fetch_array($result, MYSQLI_ASSOC);
+        }
+
+        return $otp;
+    }
+
+        //insert into user table ( insert )
 
     public function insertintoUser($params = null, $table = "users")
     {
+        
         if ($this->db->con != null) {
             if ($params != null) {
                 //create sql query
-                $folder_name = abs(crc32(uniqid()));
+                $folder_name = $this->uniqueFolderId();
                 $query_string = sprintf("INSERT INTO %s(username, email, password, file_size, file_lim, folder_name) 
                 VALUES('%s','%s','%s','%s','%d','%s')", $table, $params["username"], $params["email"], password_hash($params["password"], PASSWORD_BCRYPT), $params["file_limit"], $params["file_size"], $folder_name);
                 mkdir($_SERVER['DOCUMENT_ROOT'] . '/pages/folders' . '/' . $folder_name);
@@ -208,4 +226,6 @@ class userController
         # Unset all session variables
 
     }
+
+
 }

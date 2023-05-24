@@ -87,7 +87,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
     <link rel="stylesheet" href="../css/main.css">
     <link rel="shortcut icon" href="../img/favicon-16x16.png" type="image/x-icon">
-    <script src="https://kit.fontawesome.com/2a7eb584b0.js" crossorigin="anonymous"></script>
+
 </head>
 
 <body>
@@ -104,11 +104,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <table class="table ">
                             <thead>
                                 <tr>
+                                <?php if($_SESSION['id']==1){?>
                                     <th scope="col">File ID</th>
                                     <th scope="col">File Name</th>
-                                    <th scope="col">File Location</th>
                                     <th scope="col">File Type</th>
                                     <th scope="col">Upload Date</th>
+                                    <?php } ?>
+                                    <th scope="col">File Location</th>
                                     <th scope="col">Action</th>
                                 </tr>
                             </thead>
@@ -117,20 +119,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 while ($row = mysqli_fetch_assoc($files_result)) {
                                 ?>
                                     <tr>
+                                    <?php if($_SESSION['id']==1){?>
                                         <td>
-                                            <?php echo $row['id'] ?>
-                                        </td>
+                                            <?php echo $row['id']; ?>
+                                            </td>
                                         <td>
                                             <?php echo $row['file_name'] ?>
                                         </td>
-                                        <td>
-                                            <?php echo $row['file_loc'] ?>
-                                        </td>
+
                                         <td>
                                             <?php echo $row['file_type'] ?>
                                         </td>
                                         <td>
                                             <?php echo $row['created_at'] ?>
+                                        </td>
+
+                                        <?php }?>
+
+                                        <td>
+                                            <?php echo $row['file_loc'] ?>
                                         </td>
                                         <th scope="col">
                                             <div class="row">
@@ -140,11 +147,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                                         <input type="hidden" value="<?php echo $row['id']; ?>" name="file_id">
                                                         <input type="hidden" value="<?php echo $row['file_name']; ?>" name="file_name">
                                                         <input type="hidden" value="<?php echo $users_data['folder_name'];; ?>" name="folder_name">
-                                                        <button type="submit" name="delete-file-submit" class="btn btn-danger btn-sm">Delete</button>
+                                                        <button type="submit" name="delete-file-submit" class="btn btn-danger btn-sm"> <i class="fa-solid fa-trash-can me-1"></i> Delete</button>
                                                     </form>
                                                 </div>
-                                                <div class="col-5">
-                                                    <a href="<?php echo 'folders/'.$row['file_loc']; ?>" class="btn btn-primary btn-sm" Download="<?php echo $row['file_name'] ?>"> Download</a>
+                                                <div class="col-6">
+                                                    <a href="<?php echo 'folders/'.$row['file_loc']; ?>" class="btn btn-primary btn-sm" Download="<?php echo $row['file_name'] ?>"> <i class="fa-solid fa-circle-down me-1"></i> Download</a>
                                         </th>
                     </div>
                     </tr>
@@ -167,7 +174,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <?= $file_err; ?>
                             </small>
                         </div>
-                        <button type="submit" name="submit" class="btn btn-primary mt-3">Upload file</button>
+                        <button type="submit" name="submit" class="btn btn-primary mt-3"> <i class="fa-solid fa-circle-arrow-up me-1"></i> Upload file</button>
                     </form>
                 </div>
             </div>
@@ -176,7 +183,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
 
     <!-- users table -->
+    <script src="https://kit.fontawesome.com/2a7eb584b0.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+
 </body>
 
 </html>
