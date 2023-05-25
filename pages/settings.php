@@ -76,33 +76,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <?php include './navbar.php'; ?>
 
     <div class="container">
-        <div class="row pt-xxl-5 justify-content-center align-items-center">
+        <div class="row pt-xxl-5 justify-content-center align-items-center ">
             <div class="col-lg-5">
-                <div class="form-wrap border rounded p-4 bg-white">
+                <div class="form-wrap border rounded p-4  bg-special text-white" data-bs-theme="dark">
                     <h1>Update my profile</h1>
                     <!-- form starts here -->
                     <form action="<?= htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" novalidate>
                         <div class="mb-3">
                             <!-- display user name -->
                             <label for="username" class="form-label">Username</label>
-                            <input type="text" class="form-control" name="username" id="username" readonly value="<?= htmlspecialchars($_SESSION["username"]); ?>">
+                            <input type="text" class="form-control bg-dark text-white" name="username" id="username" readonly value="<?= htmlspecialchars($_SESSION["username"]); ?>">
                         </div>
                         <!-- display email -->
                         <div class="mb-3">
                             <label for="email" class="form-label">Email Address</label>
-                            <input type="email" class="form-control" name="email" id="email" readonly value="<?= htmlspecialchars($_SESSION["email"]); ?>">
+                            <input type="email" class="form-control bg-dark text-white" name="email" id="email" readonly value="<?= htmlspecialchars($_SESSION["email"]); ?>">
                         </div>
 
                         <div class="mb-2">
                             <label for="password" class="form-label"> Enter Old Password</label>
-                            <input type="password" class="form-control" name="oldPassword" id="password">
+                            <input type="password" class="form-control bg-dark text-white" name="oldPassword" id="password">
                             <small class="text-danger">
                                 <?= $oldPassword_err; ?>
                             </small>
                         </div>
                         <div class="mb-2">
                             <label for="password" class="form-label">Update Password</label>
-                            <input type="password" class="form-control" name="password" id="passwordnew">
+                            <input type="password" class="form-control bg-dark text-white" name="password" id="passwordnew">
                             <small class="text-danger">
                                 <?= $password_err; ?>
                             </small>
@@ -112,7 +112,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <label for="togglePassword" class="form-check-label">Show Password</label>
                         </div>
                         <div class="mb-3">
-                            <input type="submit" class="btn btn-primary form-control" name="submit" value="Update">
+                            <input type="submit" class="btn btn-secondary form-control" name="submit" value="Update">
                         </div>
                     </form>
                     <!-- form ends here -->
@@ -125,6 +125,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
     <!-- js includes -->
+    <script src="https://kit.fontawesome.com/2a7eb584b0.js" crossorigin="anonymous"></script>
     <script defer src="../js/script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
 </body>

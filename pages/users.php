@@ -26,7 +26,7 @@ if (isset($_POST['delete-user-submit'])) {
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>User login system</title>
+  <title>All Users</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
   <link rel="stylesheet" href="../css/main.css">
   <link rel="shortcut icon" href="../img/favicon-16x16.png" type="image/x-icon">
@@ -40,7 +40,7 @@ if (isset($_POST['delete-user-submit'])) {
   <div class="container">
     <!-- users table -->
     <div class="py-5">
-      <div class="card">
+      <div class="card bg-special text-white">
         <div class="card-header ">
           <div class="row">
             <div class="col fs-5">
@@ -52,13 +52,12 @@ if (isset($_POST['delete-user-submit'])) {
           </div>
         </div>
         <div class="px-2">
-          <table class="table ">
+          <table class="table text-white">
             <thead>
               <tr>
                 <th scope="col">User ID</th>
                 <th scope="col">Name</th>
                 <th scope="col">Email</th>
-                <th scope="col">password</th>
                 <th scope="col">File Size</th>
                 <th scope="col">Files Limit</th>
                 <th scope="col">Folder Name</th>
@@ -74,7 +73,6 @@ if (isset($_POST['delete-user-submit'])) {
                 <td><?php echo $row['id'] ?></td>
                 <td><?php echo $row['username'] ?></td>
                 <td><?php echo $row['email'] ?></td>
-                <td><?php echo $row['password'] ?></td>
                 <td><?php echo $row['file_size'] ?></td>
                 <td><?php echo $row['file_lim'] ?></td>
                 <td><?php echo $row['folder_name'] ?></td>
@@ -82,7 +80,7 @@ if (isset($_POST['delete-user-submit'])) {
                 <th scope="col"><a href="./editUser.php">
                   <div class="row">
                     <div class="col-4">
-                    <a href="./editUser.php?id=<?php echo $row['id']; ?>" class="btn btn-info btn-sm text-white"> <i class="fa-solid fa-pen me-2"></i>Edit</a>
+                    <a href="./editUser.php?id=<?php echo $row['id']; ?>" class="btn btn-secondary btn-sm text-white"> <i class="fa-solid fa-pen me-2"></i>Edit</a>
                     </div>
 
                     <div class="col-4">

@@ -41,7 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $username_err = "already exist user with this name.";
     } elseif (empty(trim($_POST["username"]))) {
         #check if username field is empty
-        $username_err = "valid user name.";
+        $username_err = "invalid user name.";
     } else {
         #check for the special charachters
         $username = trim($_POST["username"]);
@@ -121,7 +121,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User login system</title>
+    <title>Edit user information</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
     <link rel="stylesheet" href="../css/main.css">
     <link rel="shortcut icon" href="../img/favicon-16x16.png" type="image/x-icon">
@@ -133,7 +133,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="container">
         <div class="row pt-xxl-5 justify-content-center align-items-center">
             <div class="col-lg-5">
-                <div class="form-wrap border rounded p-4 bg-white">
+                <div class="form-wrap border rounded p-4 bg-special text-white" data-bs-theme="dark">
                     <h1>Update</h1>
 
                     <!-- form starts here -->
@@ -141,7 +141,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <div class="mb-3">
                             <label for="username" class="form-label">Username</label>
                             <input type="text" hidden name="userid" value="<?= $row["id"]; ?>">
-                            <input type="text" class="form-control" name="username" id="username" value="<?= $row["username"]; ?>">
+                            <input type="text" class="form-control bg-dark text-white" name="username" id="username" value="<?= $row["username"]; ?>">
                             <small class="text-danger">
                                 <?= $username_err; ?>
                             </small>
@@ -149,14 +149,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                         <div class="mb-3">
                             <label for="email" class="form-label">Email Address</label>
-                            <input type="email" class="form-control" name="email" id="email" value="<?= $row["email"]; ?>">
+                            <input type="email" class="form-control bg-dark text-white" name="email" id="email" value="<?= $row["email"]; ?>">
                             <small class="text-danger">
                                 <?= $email_err; ?>
                             </small>
                         </div>
                         <div class="mb-2">
                             <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control" name="password" id="password">
+                            <input type="password" class="form-control bg-dark text-white" name="password" id="password">
                             <small class="text-danger">
                                 <?= $password_err; ?>
                             </small>
@@ -168,21 +168,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <div class="row">
                             <div class="col mb-3">
                                 <label for="username" class="form-label">File Size (mb) </label>
-                                <input type="number" class="form-control" name="file_size" id="username" value="<?= $row["file_size"]; ?>">
+                                <input type="number" class="form-control bg-dark text-white" name="file_size" id="username" value="<?= $row["file_size"]; ?>">
                                 <small class="text-danger">
                                     <?= $file_size_err; ?>
                                 </small>
                             </div>
                             <div class="col mb-3">
                                 <label for="username" class="form-label">File Limit (mb)</label>
-                                <input type="number" class="form-control" name="file_limit" id="username" value="<?= $row["file_lim"]; ?>">
+                                <input type="number" class="form-control bg-dark text-white" name="file_limit" id="username" value="<?= $row["file_lim"]; ?>">
                                 <small class="text-danger">
                                     <?= $file_limit_err; ?>
                                 </small>
                             </div>
                         </div>
                         <div class="mb-3">
-                            <input type="submit" class="btn btn-primary form-control" name="submit" value="Update">
+                            <input type="submit" class="btn btn-secondary form-control" name="submit" value="Update">
                         </div>
                     </form>
 
@@ -194,6 +194,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
     <!-- js includes -->
+    <script src="https://kit.fontawesome.com/2a7eb584b0.js" crossorigin="anonymous"></script>
     <script defer src="../js/script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
 </body>

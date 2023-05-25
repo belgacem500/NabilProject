@@ -1,4 +1,5 @@
   <!-- navBar -->
+  
   <nav class="navbar navbar-expand-lg bg-body-tertiary bg-dark" data-bs-theme="dark">
     <div class="container-fluid">
       <!-- Logo or site name -->
@@ -17,7 +18,7 @@
           
           echo'';
           echo'<li class="nav-item">';
-            echo'<a class="nav-link active" aria-current="page" href="./users.php">Dashboard</a></li>';
+            echo'<a class="nav-link" aria-current="page" href="./users.php">All Users</a></li>';
             echo '<li class="nav-item">';
             echo'<a class="nav-link" href="allfiles.php"> All Files</a></li>';
 
@@ -33,13 +34,16 @@
         <!-- /the buttons -->
 
         <!-- settings button ( on the right) -->
-        <ul class="navbar-nav ms-auto pe-5 mb-2 mb-lg-0">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0 padding-right-5" >
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               <?= htmlspecialchars($_SESSION["username"]); ?>
             </a>
             <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="./settings.php">Settings</a></li>
+              <li><a class="dropdown-item" href="./settings.php">My Settings</a></li>
+              <?php if(htmlspecialchars($_SESSION["id"]== 1)){
+              echo '<li><a class="dropdown-item" href="./serverSettings.php">Server Settings <i class="fa-solid fa-gears"></i></a></li>';
+            }        ?>
               <li>
                 <hr class="dropdown-divider">
               </li>

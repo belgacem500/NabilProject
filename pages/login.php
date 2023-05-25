@@ -53,7 +53,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>User login system</title>
+  <title>Log In</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
   <link rel="stylesheet" href="../css/main.css">
   <link rel="shortcut icon" href="./img/favicon-16x16.png" type="image/x-icon">
@@ -69,18 +69,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           echo "<div class='alert alert-danger'>" . $err . "</div>";
         }
         ?>
-        <div class="form-wrap border rounded p-4 bg-white">
+        <div class="form-wrap border rounded p-4  bg-special text-white">
           <h1>Log In</h1>
           <!-- form starts here -->
           <form action="<?= htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" novalidate>
             <div class="mb-3">
               <label for="user_login" class="form-label">Username</label>
-              <input type="text" class="form-control" name="username" id="user_login" required>
+              <input type="text" class="form-control bg-dark text-white" name="username" id="user_login">
               <small class="text-danger"><?= $user_login_err; ?></small>
             </div>
             <div class="mb-2">
               <label for="password" class="form-label">Password</label>
-              <input type="password" class="form-control" name="password" id="password" required>
+              <input type="password" class="form-control bg-dark text-white" name="password" id="password">
               <small class="text-danger"><?= $user_password_err; ?></small>
             </div>
             <div class="mb-3 form-check">
@@ -88,7 +88,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
               <label for="togglePassword" class="form-check-label">Show Password</label>
             </div>
             <div class="mb-3">
-              <input type="submit" class="btn btn-primary form-control" name="login-submit" value="Log In">
+              <input type="submit" class="btn btn-secondary form-control" name="login-submit" value="Log In">
             </div>
           </form>
           <!-- form ends here -->

@@ -9,6 +9,17 @@ body {
   padding: 0.5rem;
 }
 
+.bg-special{
+  background-color:#2b3035;
+}
+.form-control::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: white;
+  opacity: 1; /* Firefox */
+}
+.padding-right-5{
+  padding-right: 5%;
+}
+
 .form-wrap h1,
 .form-wrap .form-label {
   font-weight: 600;

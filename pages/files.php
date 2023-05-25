@@ -34,6 +34,8 @@ $file_err = "";
 $username = $uploader_id = $file_name = $file_loc = $file_type = "";
 $file_limit = 0;
 
+$check_type = $settingsCont->getFilesType();
+$checkarray = explode(",", str_replace(' ', '', $check_type['files_type']));
 
 # Processing form data when form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -61,8 +63,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $file_type = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
 
     // formats that's not allowed
-    if ($file_type == "php" || $file_type == "html") {
-        $file_err = "Sorry, html, php files are not allowed.";
+    if (!in_array($file_type, $checkarray)) {
+        $file_err = "Sorry, this file format are not allowed.";
     }
 
 
@@ -83,7 +85,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User login system</title>
+    <title>My files</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
     <link rel="stylesheet" href="../css/main.css">
     <link rel="shortcut icon" href="../img/favicon-16x16.png" type="image/x-icon">
@@ -98,10 +100,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="container">
         <div class="row py-5">
             <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header fs-5">All Files</div>
+                <div class="card bg-special text-white">
+                    <div class="card-header fs-5 bg-special text-white">All Files</div>
                     <div class="px-2">
-                        <table class="table ">
+                        <table class="table bg-special text-white">
                             <thead>
                                 <tr>
                                 <?php if($_SESSION['id']==1){?>
@@ -151,7 +153,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                                     </form>
                                                 </div>
                                                 <div class="col-6">
-                                                    <a href="<?php echo 'folders/'.$row['file_loc']; ?>" class="btn btn-primary btn-sm" Download="<?php echo $row['file_name'] ?>"> <i class="fa-solid fa-circle-down me-1"></i> Download</a>
+                                                    <a href="<?php echo 'folders/'.$row['file_loc']; ?>" class="btn btn-outline-dark bg-light btn-sm" Download="<?php echo $row['file_name'] ?>"> <i class="fa-solid fa-circle-down me-1"></i> Download</a>
                                         </th>
                     </div>
                     </tr>
@@ -164,17 +166,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card">
+            <div class="card bg-special text-white">
                 <div class="card-header fs-5">Add File</div>
                 <div class="card-body">
                     <form action="<?= htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST" enctype="multipart/form-data">
                         <div class="mb-3">
-                            <input class="form-control" name="upFile" type="file" id="formFile">
+                            <input class="form-control bg-dark text-white" name="upFile" type="file" id="formFile">
                             <small class="text-danger">
                                 <?= $file_err; ?>
                             </small>
                         </div>
-                        <button type="submit" name="submit" class="btn btn-primary mt-3"> <i class="fa-solid fa-circle-arrow-up me-1"></i> Upload file</button>
+                        <button type="submit" name="submit" class="btn btn-light bg-light mt-3"> <i class="fa-solid fa-circle-arrow-up me-1"></i> Upload file</button>
                     </form>
                 </div>
             </div>
