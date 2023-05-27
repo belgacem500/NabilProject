@@ -13,6 +13,16 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== TRUE) {
 require_once "../database/config.php";
 require_once "../database/functions.php";
 
+$num_per_page = 7;
+
+if (isset($_GET["page"])) {
+    $page = $_GET["page"];
+} else {
+    $page = 1;
+}
+$start_from = ($page - 1) * $num_per_page;
+
+
 if (isset($_POST['delete-file-submit'])) {
     $deletedfile = $fileCont->deleteFile($_POST['file_id'], $_POST['file_name'], $_POST['folder_name']);
 }
@@ -22,7 +32,7 @@ $users_data = $reg->getUsersById($_SESSION['id']);
 
 #select where uploader id = the user id
 
-$files_result = $fileCont->filesDataById($_SESSION['id']);
+$files_result = $fileCont->filesDataById( $_SESSION['id'],$start_from, $num_per_page);
 
 #to count how many file the user already uploaded
 
@@ -143,17 +153,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                         </td>
                                         <th scope="col">
                                             <div class="row">
-                                                <div class="col-5">
+                                                <div class="col-6">
                                                     <form method="post">
                                                         <!-- hidden inputs for the delete -->
                                                         <input type="hidden" value="<?php echo $row['id']; ?>" name="file_id">
                                                         <input type="hidden" value="<?php echo $row['file_name']; ?>" name="file_name">
                                                         <input type="hidden" value="<?php echo $users_data['folder_name'];; ?>" name="folder_name">
-                                                        <button type="submit" name="delete-file-submit" class="btn btn-danger btn-sm"> <i class="fa-solid fa-trash-can me-1"></i> Delete</button>
+                                                        <button type="submit" name="delete-file-submit" class="btn btn-danger btn-sm"> <i class="fa-solid fa-trash-can"></i> Delete</button>
                                                     </form>
                                                 </div>
                                                 <div class="col-6">
-                                                    <a href="<?php echo 'folders/'.$row['file_loc']; ?>" class="btn btn-outline-dark bg-light btn-sm" Download="<?php echo $row['file_name'] ?>"> <i class="fa-solid fa-circle-down me-1"></i> Download</a>
+                                                <button class="btn btn-secondary text-white btn-sm" data-link="<?php echo 'https://nabilproject.test/pages/folders/' . $row['file_loc']; ?>" onclick="myFunction(this)"><i class="fa-solid fa-copy me-1"></i> copie</button>
                                         </th>
                     </div>
                     </tr>
@@ -164,6 +174,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </table>
                 </div>
             </div>
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
+                    <?php
+
+                    $total_records = $file_count['file_num'];
+                    $total_pages = ceil($total_records / $num_per_page);
+                    for ($i = 1; $i <= $total_pages; $i++) {
+                        if($i == $page){
+                            echo "<li class='page-item'><a href='files.php?page=" . $i . "' class ='page-link active btn-bg-dark mt-5 '>" . $i . "</a></li>";
+                        }else{
+                            echo "<li class='page-item'><a href='files.php?page=" . $i . "' class =' page-link  btn-bg-dark  mt-5 '>" . $i . "</a></li>";
+
+                        }
+                    }
+                    ?>
+                </ul>
+            </nav>
         </div>
         <div class="col-md-4">
             <div class="card bg-special text-white">
@@ -185,6 +212,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
 
     <!-- users table -->
+    <script src="../js/copyfile.js"></script>
     <script src="https://kit.fontawesome.com/2a7eb584b0.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
 

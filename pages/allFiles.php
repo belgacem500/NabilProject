@@ -17,13 +17,25 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== TRUE) {
 require_once "../database/config.php";
 require_once "../database/functions.php";
 
+$num_per_page = 7;
+
+if (isset($_GET["page"])) {
+    $page= $_GET["page"];
+} else {
+    
+    $page = 1;
+}
+
+$start_from = ($page - 1) * $num_per_page;
+#files data 
+$files_result = $fileCont->getFilesData($start_from, $num_per_page);
+
 #file delete
 if (isset($_POST['delete-file-submit'])) {
     $deletedfile = $fileCont->deleteFile($_POST['file_id'], $_POST['file_name'], $_POST['folder_name']);
 }
 
-#files data 
-$files_result = $fileCont->getFilesData();
+
 
 ?>
 
@@ -97,7 +109,7 @@ $files_result = $fileCont->getFilesData();
                                                 </form>
                                             </div>
                                             <div class="col-5">
-                                                <button class="btn btn-secondary text-white btn-sm" data-link="<?php echo 'folders/' . $row['file_loc']; ?>" onclick="myFunction(this)"><i class="fa-solid fa-copy me-1"></i> copie</button>
+                                                <button class="btn btn-secondary text-white btn-sm" data-link="<?php echo 'https://nabilproject.test/pages/folders/' . $row['file_loc']; ?>" onclick="myFunction(this)"><i class="fa-solid fa-copy me-1"></i> copie</button>
                                             </div>
                                     </th>
                                 </tr>
@@ -107,13 +119,34 @@ $files_result = $fileCont->getFilesData();
                         </tbody>
                     </table>
                 </div>
-            </div>
-        </div>
 
-        <!-- users table -->
-        <script src="https://kit.fontawesome.com/2a7eb584b0.js" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
-        <script src="../js/script.js"></script>
+            </div>
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
+                    <?php
+
+                    $total_records = $fileCont->filesCount();
+
+                    $total_pages = ceil($total_records / $num_per_page);
+
+                    for ($i = 1; $i <= $total_pages; $i++) {
+                        if($i == $page){
+                            echo "<li class='page-item'><a href='allFiles.php?page=" . $i . "' class ='page-link active btn-bg-dark mt-5 '>" . $i . "</a></li>";
+                        }else{
+                            echo "<li class='page-item'><a href='allFiles.php?page=" . $i . "' class =' page-link  btn-bg-dark  mt-5 '>" . $i . "</a></li>";
+
+                        }
+                    }
+                    ?>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    <!-- users table -->
+    <script src="https://kit.fontawesome.com/2a7eb584b0.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+    <script src="../js/copyfile.js"></script>
 
 </body>
 

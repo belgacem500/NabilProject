@@ -3,27 +3,18 @@ const userPasswordEl = document.querySelector("#password");
 const userPasswordElnew = document.querySelector("#passwordnew");
 const togglePasswordEl = document.querySelector("#togglePassword");
 
-togglePasswordEl.addEventListener("click", function () {
-  if (this.checked === true) {
-    userPasswordEl.setAttribute("type", "text");
-    userPasswordElnew.setAttribute("type", "text");
-  } else {
-    userPasswordEl.setAttribute("type", "password");
-    userPasswordElnew.setAttribute("type", "password");
-  }
-});
 
-function myFunction(clickedObject) {
-
-  var copyText = clickedObject.getAttribute('data-link');
-   // Copy the text inside the text field
-  navigator.clipboard.writeText(copyText);
-
-  // Alert the copied text
-  alert("Copied the text: " + copyText);
-}
-
-
+  togglePasswordEl.addEventListener("click", function () {
+    if (this.checked === true) {
+      userPasswordEl.setAttribute("type", "text");
+      userPasswordElnew.setAttribute("type", "text");
+    } else {
+      userPasswordEl.setAttribute("type", "password");
+      userPasswordElnew.setAttribute("type", "password");
+    }
+  });
+  
+  
 // Function to generate password
 
 //get input by id

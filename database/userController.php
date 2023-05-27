@@ -13,27 +13,28 @@ class userController
     }
 
     //function to create a unique folder id
-    public function uniqueFolderId(){
+    public function uniqueFolderId()
+    {
         $result = 1;
-        while($result){
-        $number = uniqid();
-        $varray = str_split($number);
-        $len = sizeof($varray);
-        $otp = array_slice($varray, $len-6, $len);
-        $otp = implode(",", $otp);
-        $otp = str_replace(',', '', $otp);
-        $result = $this->db->con->query("SELECT id FROM users WHERE folder_name ='{$otp}'");
-        $result = mysqli_fetch_array($result, MYSQLI_ASSOC);
+        while ($result) {
+            $number = uniqid();
+            $varray = str_split($number);
+            $len = sizeof($varray);
+            $otp = array_slice($varray, $len - 6, $len);
+            $otp = implode(",", $otp);
+            $otp = str_replace(',', '', $otp);
+            $result = $this->db->con->query("SELECT id FROM users WHERE folder_name ='{$otp}'");
+            $result = mysqli_fetch_array($result, MYSQLI_ASSOC);
         }
 
         return $otp;
     }
 
-        //insert into user table ( insert )
+    //insert into user table ( insert )
 
     public function insertintoUser($params = null, $table = "users")
     {
-        
+
         if ($this->db->con != null) {
             if ($params != null) {
                 //create sql query
@@ -89,7 +90,8 @@ class userController
         }
     }
 
-    public function chackPassword($id = null , $password = null, $table = 'users'){
+    public function chackPassword($id = null, $password = null, $table = 'users')
+    {
         if (isset($id) && isset($password)) {
 
             $result = $this->db->con->query("SELECT password FROM {$table} WHERE id  = '{$id}'");
@@ -98,18 +100,17 @@ class userController
                 $realpassword = mysqli_fetch_array($result, MYSQLI_ASSOC);
                 if (password_verify($password, $realpassword['password'])) {
                     return false;
-                }
-                else{
+                } else {
                     return true;
                 }
             }
         }
     }
     //get all user data
-    public function getUsersData($table = 'users')
+    public function getUsersData($start_from = 0, $num_per_page = 0, $table = 'users')
     {
 
-        $result = $this->db->con->query("SELECT * FROM {$table}");
+        $result = $this->db->con->query("SELECT * FROM {$table} limit {$start_from},{$num_per_page}");
 
         $resultArray = array();
 
@@ -121,7 +122,7 @@ class userController
 
         return $resultArray;
     }
-    
+
     //get specific user data using id
     public function getUsersById($user_id = null, $table = 'users')
     {
@@ -199,13 +200,15 @@ class userController
     //edit user information by admin
     public function updateUser($param_user_id = NULL, $paramusername = NULL, $param_email = NULL, $param_password = NULL, $param_file_size = NULL, $param_file_lim = NULL, $table = 'users')
     {
-        if ($param_user_id != null) {
-
-            $result = $this->db->con->query("UPDATE Users SET username = '{$paramusername}' ,email = '{$param_email}' , password = '{$param_password}', file_size = {$param_file_size}, file_lim = {$param_file_lim } WHERE id = {$param_user_id} ");
-           
-            return $result;
+        if ($param_user_id != null && $param_password != NULL) {
+            $password = password_hash($param_password, PASSWORD_DEFAULT);
+            $result = $this->db->con->query("UPDATE Users SET username = '{$paramusername}' ,email = '{$param_email}' , password = '{$password}', file_size = {$param_file_size}, file_lim = {$param_file_lim} WHERE id = {$param_user_id} ");
+        } else {
+            $result = $this->db->con->query("UPDATE Users SET username = '{$paramusername}' ,email = '{$param_email}', file_size = {$param_file_size}, file_lim = {$param_file_lim} WHERE id = {$param_user_id} ");
         }
-    } 
+
+        return $result;
+    }
 
     //edit user profile 
     public function updateUserPassword($param_user_id = NULL, $param_password = NULL, $table = 'users')
@@ -213,10 +216,48 @@ class userController
         if ($param_user_id != null && $param_password != NULL) {
 
             $result = $this->db->con->query("UPDATE {$table} SET password='{$param_password}' WHERE id='{$param_user_id}'");
-           
+
             return $result;
         }
-    } 
+    }
+
+    public function usersCount($table = 'users')
+    {
+        if ($this->db->con != null) {
+            $result = $this->db->con->query("SELECT id as file_num FROM {$table}");
+            return mysqli_num_rows($result);
+        }
+    }
+
+    public function getUsersDataWithSearch($searchTerm, $start_from, $num_per_page)
+    {
+        $searchTerm = "%{$searchTerm}%";
+        $query = "SELECT * FROM users WHERE username LIKE ? LIMIT ?, ?";
+        $stmt = $this->db->con->prepare($query);
+        $stmt->bind_param("sii", $searchTerm, $start_from, $num_per_page);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $stmt->close();
+        $users = [];
+        while ($row = $result->fetch_assoc()) {
+            $users[] = $row;
+        }
+        return $users;
+    }
+
+    public function usersCountWithSearch($searchTerm)
+    {
+        $searchTerm = "%{$searchTerm}%";
+        $query = "SELECT COUNT(*) as count FROM users WHERE username LIKE ?";
+        $stmt = $this->db->con->prepare($query);
+        $stmt->bind_param("s", $searchTerm);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $count = $result->fetch_assoc()['count'];
+        $stmt->close();
+        return $count;
+    }
+
     //logout
     public function logout()
     {
@@ -226,6 +267,4 @@ class userController
         # Unset all session variables
 
     }
-
-
 }

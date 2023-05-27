@@ -40,39 +40,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     # Validate email 
-    if (empty(trim($_POST["email"]))) {
-        $email_err = "Please enter an email address";
+    
+    if ($reg->checkUserEmail($_POST["email"]) != 0) {
+        #Check if there is a user with the same name
+        $email_err = "already exist user with this email.";
+    }
+    
+    elseif(empty(trim($_POST["email"]))) {
+        $email_err = "Please enter valid an email address";
     } else {
         $email = filter_var($_POST["email"], FILTER_SANITIZE_EMAIL);
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $email_err = "Please enter a valid email address.";
-        } else {
-            # Prepare a select statement
-            $sql = "SELECT id FROM users WHERE email = ?";
-
-            if ($stmt = mysqli_prepare($link, $sql)) {
-                # Bind variables to the statement as parameters
-                mysqli_stmt_bind_param($stmt, "s", $param_email);
-
-                # Set parameters
-                $param_email = $email;
-
-                # Execute the prepared statement 
-                if (mysqli_stmt_execute($stmt)) {
-                    # Store result
-                    mysqli_stmt_store_result($stmt);
-
-                    # Check if email is already registered
-                    if (mysqli_stmt_num_rows($stmt) == 1) {
-                        $email_err = "This email is already registered.";
-                    }
-                } else {
-                    echo "<script>" . "alert('Oops! Something went wrong. Please try again later.');" . "</script>";
-                }
-
-                # Close statement
-                mysqli_stmt_close($stmt);
-            }
         }
     }
 

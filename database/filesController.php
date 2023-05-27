@@ -38,14 +38,23 @@ class fileController
             return mysqli_fetch_assoc($result);
         }
     }   
-    public function getFilesData()
+    
+    public function getFilesData($start_from = 0,$num_per_page = 0)
     {
         if ($this->db->con != null) {
-            $result = $this->db->con->query("SELECT files.* , users.username , users.folder_name FROM `users` , `files` WHERE users.id = files.uploader_id");
+            $result = $this->db->con->query("SELECT files.* , users.username , users.folder_name FROM `users` , `files` WHERE users.id = files.uploader_id limit {$start_from},{$num_per_page} ");
 
             return $result;
         }
     }
+
+    public function filesCount( $table = "files")
+    {
+        if ($this->db->con != null) {
+            $result = $this->db->con->query("SELECT id as file_num FROM {$table}");
+            return mysqli_num_rows($result);
+        }
+    }   
 
     public function getFileCountById($uploader_id = null, $table = 'files')
     {
@@ -63,11 +72,11 @@ class fileController
         }
     }
 
-    public function filesDataById($user_id = null, $table = 'files')
+    public function filesDataById($user_id = null, $start_from = 0,$num_per_page = 0 , $table = 'files')
     {
         if ($this->db->con != null) {
             if (isset($user_id)) {
-                $result = $this->db->con->query("SELECT * FROM {$table} WHERE uploader_id = {$user_id}");
+                $result = $this->db->con->query("SELECT * FROM {$table} WHERE uploader_id = {$user_id}  limit {$start_from},{$num_per_page}");
             }
 
             return $result;

@@ -95,18 +95,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                         <div class="mb-2">
                             <label for="password" class="form-label"> Enter Old Password</label>
-                            <input type="password" class="form-control bg-dark text-white" name="oldPassword" id="password">
+                            <input type="password" class="form-control bg-dark text-white" placeholder="enter old password" name="oldPassword" id="passwordnew">
                             <small class="text-danger">
                                 <?= $oldPassword_err; ?>
                             </small>
                         </div>
                         <div class="mb-2">
                             <label for="password" class="form-label">Update Password</label>
-                            <input type="password" class="form-control bg-dark text-white" name="password" id="passwordnew">
-                            <small class="text-danger">
-                                <?= $password_err; ?>
-                            </small>
-                        </div>
+                            <div class="input-group mb-2">
+                                <div class="input-group mb-3">
+                                    <input type="password" class="form-control bg-dark text-white" placeholder="enter password" name="password" id="password">
+                                    <button class="btn btn-outline-secondary text-white" type="button" onclick="genPassword()" id="button-addon2">Generate Password</button>
+                                </div>
+                                <small class="text-danger">
+                                    <?= $password_err; ?>
+                                </small>
+                            </div>
                         <div class="mb-3 form-check">
                             <input type="checkbox" class="form-check-input" id="togglePassword">
                             <label for="togglePassword" class="form-check-label">Show Password</label>

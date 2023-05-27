@@ -65,13 +65,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     # Validate password
-    if (empty(trim($_POST["password"]))) {
-        $password_err = "Please enter a valid password.";
-    } else {
-        $password = trim($_POST["password"]);
-        if (strlen($password) < 8) {
-            $password_err = "Password must contain at least 8 or more characters.";
-        }
+
+    $password = trim($_POST["password"]);
+    if (strlen($password) < 8 && $password!="") {
+        $password_err = "Password must contain at least 8 or more characters.";
     }
     # Validate File Size
     if (empty(trim($_POST["file_size"]))) {
@@ -97,7 +94,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     # Check input errors before inserting data into database
     if (empty($username_err) && empty($email_err) && empty($password_err) && empty($file_size_err) && empty($file_limit_err)) {
-        $update = $reg->updateUser($user_id, $username, $email, password_hash($password, PASSWORD_DEFAULT), $file_size, $file_limit);
+        $update = $reg->updateUser($user_id, $username, $email, $password, $file_size, $file_limit);
             if ($update) {
                 echo "<script>" . "window.location.href='./users.php';" . "</script>";
                 exit;
@@ -156,11 +153,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         </div>
                         <div class="mb-2">
                             <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control bg-dark text-white" name="password" id="password">
-                            <small class="text-danger">
-                                <?= $password_err; ?>
-                            </small>
-                        </div>
+                            <div class="input-group mb-2">
+                                <div class="input-group mb-3">
+                                    <input type="password" class="form-control bg-dark text-white" placeholder="enter password" name="password" id="password">
+                                    <button class="btn btn-outline-secondary text-white" type="button" onclick="genPassword()" id="button-addon2">Generate Password</button>
+                                </div>
+                                <small class="text-danger">
+                                    <?= $password_err; ?>
+                                </small>
+                            </div>
                         <div class="mb-3 form-check">
                             <input type="checkbox" class="form-check-input" id="togglePassword">
                             <label for="togglePassword" class="form-check-label">Show Password</label>
