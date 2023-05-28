@@ -198,8 +198,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <div class="card-body">
                     <form action="<?= htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST" enctype="multipart/form-data">
                         <div class="mb-3">
-                            <input class="form-control bg-dark text-white" name="upFile" type="file" id="formFile">
-                            <small class="text-danger">
+                            <input class="form-control bg-dark text-white" name="upFile" type="file" id="formFile" onchange="checkFileSize(this)">
+                            <small id="file-size-error" class="text-danger">
                                 <?= $file_err; ?>
                             </small>
                         </div>
@@ -210,6 +210,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
     </div>
     </div>
+
+<!-- script to check the file size before upload  -->
+<script>
+    
+  function checkFileSize(input) {
+    var fileSize = input.files[0].size; // Get the file size in bytes
+    var maxSize = <?php echo intval($users_data["file_size"]) * 1000000; ?>; // Get the maximum file size allowed in bytes
+    var fileSizeInMB = fileSize / (1024 * 1024); // Convert file size to MB
+
+    var fileSizeErrorElement = document.getElementById("file-size-error");
+
+    // Check if file size exceeds the maximum limit
+    if (fileSize > maxSize) {
+        fileSizeErrorElement.textContent = "File size exceeds the maximum limit of <?= intval($users_data["file_size"]) ?>MB.";
+        input.value = ""; // Clear the selected file
+    } else {
+        fileSizeErrorElement.textContent = "";
+    }
+}
+
+</script>
 
     <!-- users table -->
     <script src="../js/copyfile.js"></script>

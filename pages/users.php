@@ -121,7 +121,7 @@ $total_pages = ceil($total_records / $num_per_page);
                       </div>
 
                 </th>
-                </tr>
+                
               <?php
               endforeach;
               ?>
