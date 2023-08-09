@@ -2,7 +2,14 @@
 # Initialize the session
 ob_start();
 session_start();
+require_once "../database/functions.php";
 
+# check if the user exist
+if (!$reg->checkUserExist($_SESSION['id'])) {
+    session_destroy();
+    echo "<script>window.location.href='./login.php';</script>";
+    exit;
+}
 # If user is not logged in then redirect him to login page 
 #and if he's not adming he won't be able to reach this page
 if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== TRUE) {
@@ -13,12 +20,8 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== TRUE) {
     exit;
 }
 
-# Include connection
-require_once "../database/config.php";
-require_once "../database/functions.php";
 
 $row = $settingsCont->getServerData();
-
 # Define variables and initialize with empty values
 $domain_err = $files_type_err ="";
 
@@ -41,6 +44,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         #insert into server settings domain name
         $settingsCont->updateDomainName($_POST["domain"]);
         $settingsCont->updateFilesType($_POST["files_type"]);
+        $settingsCont->updateUploadFolder($_POST["upload_folder"]);
     }
 
 }
@@ -79,6 +83,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             </small>
                         </div>
                         <div class="mb-3">
+                            <label for="username" class="form-label">Upload Folder Name</label>
+                            <input type="text" class="form-control bg-dark text-white" placeholder="enter Upload Folder name" name="upload_folder" id="uploadfolder" value = <?php  echo $row['upload_folder'] ;?>>
+                        </div>
+                        <div class="mb-3">
                             <label for="email" class="form-label">Allowed files type</label>
                             <textarea  type="text-area" class="form-control bg-dark text-white" placeholder="exmp: txt, php ,ext" name="files_type" id="files_type" ><?php  echo $row['files_type'] ;?></textarea>
                             <small class="text-danger">
@@ -100,8 +108,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <!-- js includes -->
     <script src="https://kit.fontawesome.com/2a7eb584b0.js" crossorigin="anonymous"></script>
-
-    <script defer src="../js/script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
 </body>
 

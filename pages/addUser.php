@@ -2,9 +2,18 @@
 # Initialize the session
 ob_start();
 session_start();
+# Include connection
+require_once "../database/functions.php";
+# check if the user exist
+if (!$reg->checkUserExist($_SESSION['id'])) {
+    session_destroy();
+    echo "<script>window.location.href='./login.php';</script>";
+    exit;
+}
 
 # If user is not logged in then redirect him to login page 
 #and if he's not adming he won't be able to reach this page
+
 if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== TRUE) {
     echo "<script>" . "window.location.href='./pages/login.php';" . "</script>";
     exit;
@@ -13,9 +22,7 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== TRUE) {
     exit;
 }
 
-# Include connection
-require_once "../database/config.php";
-require_once "../database/functions.php";
+
 # Define variables and initialize with empty values
 $username_err = $email_err = $password_err = $file_size_err = $file_limit_err = "";
 $username = $email = $password =
@@ -90,8 +97,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $reg->insertintoUser($_POST);
     }
 
-    # Close connection
-    mysqli_close($link);
 }
 
 ?>

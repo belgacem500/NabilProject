@@ -1,6 +1,14 @@
 <?php
 # Initialize the session
 session_start();
+require_once "../database/functions.php";
+# check if the user exist
+if (!$reg->checkUserExist($_SESSION['id'])) {
+    session_destroy();
+    echo "<script>window.location.href='./login.php';</script>";
+    exit;
+}
+
 # If user is not logged in then redirect him to login page 
 #and if he's not adming he won't be able to reach this page
 if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== TRUE) {
@@ -14,7 +22,6 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== TRUE) {
 }
 
 # Include connection
-require_once "../database/config.php";
 require_once "../database/functions.php";
 
 # Define variables and initialize with empty values

@@ -1,9 +1,8 @@
 <?php
 # Initialize session
 session_start();
-# Include connection
-require_once "../database/config.php";
 require_once "../database/functions.php";
+
 
 # Check if user is already logged in, If yes then redirect him to index page
 if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] == TRUE) {

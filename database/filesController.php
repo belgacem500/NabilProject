@@ -14,15 +14,16 @@ class fileController
 
     //insert into user table ( insert )
 
+
+
     public function addFile($uploader_id=null, $file_name=null, $target_file=null, $file_type=null, $file = null, $table = "files")
     {
+
         if ($this->db->con != null) {
             if ($uploader_id != null && $file_name != null && $target_file != null && $file_type != null) {
                 //create sql query
-
                 $query_string = sprintf("INSERT INTO {$table} (`uploader_id`, `file_name`, `file_loc`, `file_type`) VALUES ('{$uploader_id}', '{$file_name}', '{$target_file}' , '{$file_type}')");
-                move_uploaded_file($file, UPLOAD_SERVER . '/' . $target_file);
-
+                move_uploaded_file($file,'../'. UPLOAD_FOLDER . '/' . $target_file);
                 //execute query
                 $result = $this->db->con->query($query_string);
                 echo "<script>" . "window.location.href='./files.php';" . "</script>";
@@ -31,15 +32,16 @@ class fileController
         }
     }
 
+
     public function filesCountById($user_id = null, $table = "files")
     {
         if ($this->db->con != null) {
             $result = $this->db->con->query("SELECT COUNT(id) as file_num FROM {$table} WHERE uploader_id = {$user_id}");
             return mysqli_fetch_assoc($result);
         }
-    }   
-    
-    public function getFilesData($start_from = 0,$num_per_page = 0)
+    }
+
+    public function getFilesData($start_from = 0, $num_per_page = 0)
     {
         if ($this->db->con != null) {
             $result = $this->db->con->query("SELECT files.* , users.username , users.folder_name FROM `users` , `files` WHERE users.id = files.uploader_id limit {$start_from},{$num_per_page} ");
@@ -48,13 +50,13 @@ class fileController
         }
     }
 
-    public function filesCount( $table = "files")
+    public function filesCount($table = "files")
     {
         if ($this->db->con != null) {
             $result = $this->db->con->query("SELECT id as file_num FROM {$table}");
             return mysqli_num_rows($result);
         }
-    }   
+    }
 
     public function getFileCountById($uploader_id = null, $table = 'files')
     {
@@ -72,7 +74,7 @@ class fileController
         }
     }
 
-    public function filesDataById($user_id = null, $start_from = 0,$num_per_page = 0 , $table = 'files')
+    public function filesDataById($user_id = null, $start_from = 0, $num_per_page = 0, $table = 'files')
     {
         if ($this->db->con != null) {
             if (isset($user_id)) {
@@ -90,7 +92,7 @@ class fileController
         if ($this->db->con != null) {
             if ($file_id != null) {
 
-                unlink($_SERVER['DOCUMENT_ROOT'] . '/pages/folders' . '/' . $folder_name . '/' . $file_name);
+                unlink($_SERVER['DOCUMENT_ROOT'] . '/' . UPLOAD_FOLDER . '/' . $folder_name . '/' . $file_name);
                 $result = $this->db->con->query("DELETE FROM {$table} WHERE id={$file_id}");
 
                 if ($result) {

@@ -2,6 +2,14 @@
 # Initialize the session
 session_start();
 
+require_once "../database/functions.php";
+# check if the user exist
+if (!$reg->checkUserExist($_SESSION['id'])) {
+    session_destroy();
+    echo "<script>window.location.href='./login.php';</script>";
+    exit;
+}
+
 # If user is not logged in then redirect him to login page 
 #and if he's not adming he won't be able to reach this page
 if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== TRUE) {
@@ -12,10 +20,6 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== TRUE) {
     exit;
 }
 
-# Include connection
-
-require_once "../database/config.php";
-require_once "../database/functions.php";
 
 $num_per_page = 7;
 
@@ -89,7 +93,7 @@ if (isset($_POST['delete-file-submit'])) {
                                         <?php echo $row['file_name'] ?>
                                     </td>
                                     <td>
-                                        <?php echo $row['file_loc'] ?>
+                                        <?php echo UPLOAD_SERVER.'/'.UPLOAD_FOLDER .'/'. $row['file_loc']; ?>
                                     </td>
                                     <td>
                                         <?php echo $row['file_type'] ?>
@@ -105,12 +109,11 @@ if (isset($_POST['delete-file-submit'])) {
                                                     <input type="hidden" value="<?php echo $row['id']; ?>" name="file_id">
                                                     <input type="hidden" value="<?php echo $row['file_name']; ?>" name="file_name">
                                                     <input type="hidden" value="<?php echo $row['folder_name'];; ?>" name="folder_name">
-                                                    <button type="submit" name="delete-file-submit" class="btn btn-danger  btn-sm"><i class="fa-solid fa-trash-can me-1"></i> Delete</button>
+                                                    <button type="submit" name="delete-file-submit" class="btn btn-danger  btn-sm"><i class="fa-solid fa-trash-can"></i></button>
                                                 </form>
                                             </div>
                                             <div class="col-5">
-                                                <button class="btn btn-secondary text-white btn-sm" data-link="<?php echo 'https://nabilproject.test/pages/folders/' . $row['file_loc']; ?>" onclick="myFunction(this)"><i class="fa-solid fa-copy me-1"></i> copie</button>
-                                            </div>
+<!--                                             <button class="btn btn-secondary text-white btn-sm" data-link="<?php /* echo UPLOAD_SERVER.'/'.UPLOAD_FOLDER .'/'. $row['file_loc']; */ ?>" onclick="myFunction(this)"><i class="fa-solid fa-copy me-1"></i> copie</button> -->                                            </div>
                                     </th>
                                 </tr>
                             <?php

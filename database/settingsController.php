@@ -21,8 +21,9 @@ class settingsController
             echo "<script>" . "window.location.href='./serverSettings.php';" . "</script>";
             return $result;
         }
-    } 
+    }
 
+    // add a file to the list of files allowed to upload
     public function updateFilesType($param_files_type = NULL, $table = 'settings')
     {
         if ($param_files_type != null) {
@@ -30,75 +31,70 @@ class settingsController
             $result = $this->db->con->query("UPDATE `{$table}` SET `files_type`='{$param_files_type}' WHERE id = 1");
             echo "<script>" . "window.location.href='./serverSettings.php';" . "</script>";
             return $result;
-            
         }
-    } 
+    }
+
+    // to edit the folder that contains the users folders name , if empty it will be the default value 'uploads'
+    public function updateUploadFolder($param_folder_name = NULL, $table = 'settings')
+    {
+
+        if ($param_folder_name !== "") {
+
+                $oldFolderName = '../'.UPLOAD_FOLDER ; // Replace with the current folder name
+                $newFolderName = '../'.$param_folder_name; // Replace with the new folder name
+                // Rename the folder
+                if (rename($oldFolderName, $newFolderName)) {
+                    $result = $this->db->con->query("UPDATE `{$table}` SET `upload_folder`='{$param_folder_name}' WHERE id = 1");
+                }
+
+        } else {
+            $oldFolderName = '../'.UPLOAD_FOLDER ; // Replace with the current folder name
+            $newFolderName = '../'."uploads"; // Replace with the new folder name
+            // Rename the folder
+            if (rename($oldFolderName, $newFolderName)) {
+                $result = $this->db->con->query("UPDATE `{$table}` SET `upload_folder`='{$param_folder_name}' WHERE id = 1");
+            }
+        }
+        echo "<script>" . "window.location.href='./serverSettings.php';" . "</script>";
+        return $result;
+
+    }
 
 
     //get all user data
-
-    public function getFilesType($table = 'settings')
-    {
-        $result = $this->db->con->query("SELECT files_type FROM {$table} WHERE id = 1");
-
-            if ($result != false) {
-                $resultArray = mysqli_fetch_array($result, MYSQLI_ASSOC);
-            }
-
-        return $resultArray;
-    }
 
     public function getServerData($table = 'settings')
     {
         $result = $this->db->con->query("SELECT * FROM {$table} WHERE id = 1");
 
-            if ($result != false) {
-                $resultArray = mysqli_fetch_array($result, MYSQLI_ASSOC);
-            }
+        if ($result != false) {
+            $resultArray = mysqli_fetch_array($result, MYSQLI_ASSOC);
+        }
 
         return $resultArray;
     }
 
-    //check if username is already used
-    public function checkUserName($username = null, $table = 'users')
+    //get upload folder name
+    public function getUploadFolder($table = 'settings')
     {
-        if (isset($username)) {
-            $result = $this->db->con->query("SELECT id FROM {$table} WHERE username = '{$username}'");
-            if ($result != false) {
-                $resultArray = mysqli_fetch_array($result, MYSQLI_ASSOC);
+        $result = $this->db->con->query("SELECT upload_folder FROM {$table} WHERE id = 1");
 
-                if (isset($resultArray)) {
-                    $check = $resultArray['id'];
-                } else {
-                    $check = 0;
-                }
-
-                return $check;
-            }
+        if ($result != false) {
+            $resultArray = mysqli_fetch_array($result, MYSQLI_ASSOC);
         }
+
+        return $resultArray;
     }
 
-
-
-    //edit user profile 
-    public function updateUserPassword($param_user_id = NULL, $param_password = NULL, $table = 'users')
+    //get files type allowed to be uploaded
+    public function getFilesType($table = 'settings')
     {
-        if ($param_user_id != null && $param_password != NULL) {
+        $result = $this->db->con->query("SELECT files_type FROM {$table} WHERE id = 1");
 
-            $result = $this->db->con->query("UPDATE {$table} SET password='{$param_password}' WHERE id='{$param_user_id}'");
-           
-            return $result;
+        if ($result != false) {
+            $resultArray = mysqli_fetch_array($result, MYSQLI_ASSOC);
         }
-    } 
-    //logout
-    public function logout()
-    {
-        $_SESSION = array();
-        session_destroy();
-        header("Location: " . $_SERVER['DOCUMENT_ROOT'] . "/pages/login.php;'");
-        # Unset all session variables
 
+        return $resultArray;
     }
-
-
 }

@@ -41,11 +41,16 @@ class userController
                 $folder_name = $this->uniqueFolderId();
                 $query_string = sprintf("INSERT INTO %s(username, email, password, file_size, file_lim, folder_name) 
                 VALUES('%s','%s','%s','%s','%d','%s')", $table, $params["username"], $params["email"], password_hash($params["password"], PASSWORD_BCRYPT), $params["file_limit"], $params["file_size"], $folder_name);
-                mkdir($_SERVER['DOCUMENT_ROOT'] . '/pages/folders' . '/' . $folder_name);
+                mkdir($_SERVER['DOCUMENT_ROOT'] . '/'.UPLOAD_FOLDER . '/' . $folder_name);
+                    // Create the index.php file inside the folder
+
+                $indexFile = $_SERVER['DOCUMENT_ROOT'] . '/'.UPLOAD_FOLDER . '/' . $folder_name. '/index.php';
+                $content = '<?php' . PHP_EOL . 'echo "404";' . PHP_EOL . '?>';
+                file_put_contents($indexFile, $content);
+                
 
                 //execute query
                 $result = $this->db->con->query($query_string);
-                echo "<script>" . "alert('Registeration completed successfully.');" . "</script>";
                 echo "<script>" . "window.location.href='./users.php';" . "</script>";
                 return $result;
             }
@@ -183,8 +188,8 @@ class userController
             $result1 = $result = $this->db->con->query("SELECT folder_name FROM users WHERE id ={$user_id}");
 
             $row = mysqli_fetch_assoc($result1);
-
-            $dirname = $_SERVER['DOCUMENT_ROOT'] . '/pages/folders' . '/' . $row["folder_name"];
+            
+            $dirname = $_SERVER['DOCUMENT_ROOT'] . '/'.UPLOAD_FOLDER . '/' . $row["folder_name"];
             array_map('unlink', glob("$dirname/*.*"));
             rmdir($dirname);
 
@@ -221,6 +226,7 @@ class userController
         }
     }
 
+    //count users 
     public function usersCount($table = 'users')
     {
         if ($this->db->con != null) {
@@ -229,6 +235,7 @@ class userController
         }
     }
 
+    //Search for a user
     public function getUsersDataWithSearch($searchTerm, $start_from, $num_per_page)
     {
         $searchTerm = "%{$searchTerm}%";
@@ -244,7 +251,7 @@ class userController
         }
         return $users;
     }
-
+// count users that you searched for 
     public function usersCountWithSearch($searchTerm)
     {
         $searchTerm = "%{$searchTerm}%";
@@ -258,6 +265,20 @@ class userController
         return $count;
     }
 
+    function checkUserExist($user_id) {
+        // Add your database query to check if the user exists
+        // Return true if user exists, false otherwise
+        // Example:
+        $query = "SELECT COUNT(*) as count FROM users WHERE id = ?";
+        $stmt = $this->db->con->prepare($query);
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+        $count = $row['count'];
+        return $count > 0;
+    }
+
     //logout
     public function logout()
     {
@@ -267,4 +288,5 @@ class userController
         # Unset all session variables
 
     }
+    
 }

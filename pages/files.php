@@ -1,6 +1,19 @@
 <?php
 # Initialize the session
+
 session_start();
+require_once "../database/functions.php";
+# check if the user exist
+if (!$reg->checkUserExist($_SESSION['id'])) {
+    session_destroy();
+    echo "<script>window.location.href='./login.php';</script>";
+    exit;
+}
+if (!$reg->checkUserExist($_SESSION['id'])) {
+    session_destroy();
+    echo "<script>window.location.href='./login.php';</script>";
+    exit;
+}
 
 # If user is not logged in then redirect him to login page
 if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== TRUE) {
@@ -10,8 +23,7 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== TRUE) {
 
 # Include connection
 
-require_once "../database/config.php";
-require_once "../database/functions.php";
+
 
 $num_per_page = 7;
 
@@ -32,7 +44,7 @@ $users_data = $reg->getUsersById($_SESSION['id']);
 
 #select where uploader id = the user id
 
-$files_result = $fileCont->filesDataById( $_SESSION['id'],$start_from, $num_per_page);
+$files_result = $fileCont->filesDataById($_SESSION['id'], $start_from, $num_per_page);
 
 #to count how many file the user already uploaded
 
@@ -80,11 +92,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     # Check input errors before inserting data into database
     if (empty($file_err)) {
-             # call functions add file
-            $add_file= $fileCont->addfile($_SESSION["id"], $file_name, $target_file, $file_type , $_FILES["upFile"]["tmp_name"]);
-            # Execute the prepared statement
+        # call functions add file
+        $add_file = $fileCont->addfile($_SESSION["id"], $file_name, $target_file, $file_type, $_FILES["upFile"]["tmp_name"]);
+        # Execute the prepared statement
     }
-
 }
 ?>
 
@@ -116,11 +127,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <table class="table bg-special text-white">
                             <thead>
                                 <tr>
-                                <?php if($_SESSION['id']==1){?>
-                                    <th scope="col">File ID</th>
-                                    <th scope="col">File Name</th>
-                                    <th scope="col">File Type</th>
-                                    <th scope="col">Upload Date</th>
+                                    <?php if ($_SESSION['id'] == 1) { ?>
+                                        <th scope="col">File ID</th>
+                                        <th scope="col">File Name</th>
+                                        <th scope="col">File Type</th>
+                                        <th scope="col">Upload Date</th>
                                     <?php } ?>
                                     <th scope="col">File Location</th>
                                     <th scope="col">Action</th>
@@ -131,25 +142,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 while ($row = mysqli_fetch_assoc($files_result)) {
                                 ?>
                                     <tr>
-                                    <?php if($_SESSION['id']==1){?>
-                                        <td>
-                                            <?php echo $row['id']; ?>
+                                        <?php if ($_SESSION['id'] == 1) { ?>
+                                            <td>
+                                                <?php echo $row['id']; ?>
                                             </td>
-                                        <td>
-                                            <?php echo $row['file_name'] ?>
-                                        </td>
+                                            <td>
+                                                <?php echo $row['file_name'] ?>
+                                            </td>
+
+                                            <td>
+                                                <?php echo $row['file_type'] ?>
+                                            </td>
+                                            <td>
+                                                <?php echo $row['created_at'] ?>
+                                            </td>
+
+                                        <?php } ?>
 
                                         <td>
-                                            <?php echo $row['file_type'] ?>
-                                        </td>
-                                        <td>
-                                            <?php echo $row['created_at'] ?>
-                                        </td>
-
-                                        <?php }?>
-
-                                        <td>
-                                            <?php echo $row['file_loc'] ?>
+                                            <?php echo UPLOAD_SERVER . '/' . UPLOAD_FOLDER . '/' . $row['file_loc']; ?>
                                         </td>
                                         <th scope="col">
                                             <div class="row">
@@ -158,12 +169,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                                         <!-- hidden inputs for the delete -->
                                                         <input type="hidden" value="<?php echo $row['id']; ?>" name="file_id">
                                                         <input type="hidden" value="<?php echo $row['file_name']; ?>" name="file_name">
-                                                        <input type="hidden" value="<?php echo $users_data['folder_name'];; ?>" name="folder_name">
-                                                        <button type="submit" name="delete-file-submit" class="btn btn-danger btn-sm"> <i class="fa-solid fa-trash-can"></i> Delete</button>
+                                                        <input type="hidden" value="<?php echo $users_data['folder_name']; ?>" name="folder_name">
+                                                        <button type="submit" name="delete-file-submit" class="btn btn-danger btn-sm"> <i class="fa-solid fa-trash-can"></i></button>
                                                     </form>
                                                 </div>
                                                 <div class="col-6">
-                                                <button class="btn btn-secondary text-white btn-sm" data-link="<?php echo 'https://nabilproject.test/pages/folders/' . $row['file_loc']; ?>" onclick="myFunction(this)"><i class="fa-solid fa-copy me-1"></i> copie</button>
+                                                    <!--                                                 <button class="btn btn-secondary text-white btn-sm" data-link="<?php /* echo '/' . UPLOAD_SERVER . '/' . UPLOAD_FOLDER . '/' . $row['file_loc']; */ ?>" onclick="myFunction(this)"><i class="fa-solid fa-copy me-1"></i> copie</button> -->
                                         </th>
                     </div>
                     </tr>
@@ -181,11 +192,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $total_records = $file_count['file_num'];
                     $total_pages = ceil($total_records / $num_per_page);
                     for ($i = 1; $i <= $total_pages; $i++) {
-                        if($i == $page){
+                        if ($i == $page) {
                             echo "<li class='page-item'><a href='files.php?page=" . $i . "' class ='page-link active btn-bg-dark mt-5 '>" . $i . "</a></li>";
-                        }else{
+                        } else {
                             echo "<li class='page-item'><a href='files.php?page=" . $i . "' class =' page-link  btn-bg-dark  mt-5 '>" . $i . "</a></li>";
-
                         }
                     }
                     ?>
@@ -211,26 +221,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
     </div>
 
-<!-- script to check the file size before upload  -->
-<script>
-    
-  function checkFileSize(input) {
-    var fileSize = input.files[0].size; // Get the file size in bytes
-    var maxSize = <?php echo intval($users_data["file_size"]) * 1000000; ?>; // Get the maximum file size allowed in bytes
-    var fileSizeInMB = fileSize / (1024 * 1024); // Convert file size to MB
+    <!-- script to check the file size before upload  -->
+    <script>
+        function checkFileSize(input) {
+            var fileSize = input.files[0].size; // Get the file size in bytes
+            var maxSize = <?php echo intval($users_data["file_size"]) * 1000000; ?>; // Get the maximum file size allowed in bytes
+            var fileSizeInMB = fileSize / (1024 * 1024); // Convert file size to MB
 
-    var fileSizeErrorElement = document.getElementById("file-size-error");
+            var fileSizeErrorElement = document.getElementById("file-size-error");
 
-    // Check if file size exceeds the maximum limit
-    if (fileSize > maxSize) {
-        fileSizeErrorElement.textContent = "File size exceeds the maximum limit of <?= intval($users_data["file_size"]) ?>MB.";
-        input.value = ""; // Clear the selected file
-    } else {
-        fileSizeErrorElement.textContent = "";
-    }
-}
-
-</script>
+            // Check if file size exceeds the maximum limit
+            if (fileSize > maxSize) {
+                fileSizeErrorElement.textContent = "File size exceeds the maximum limit of <?= intval($users_data["file_size"]) ?>MB.";
+                input.value = ""; // Clear the selected file
+            } else {
+                fileSizeErrorElement.textContent = "";
+            }
+        }
+    </script>
 
     <!-- users table -->
     <script src="../js/copyfile.js"></script>
